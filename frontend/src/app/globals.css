@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1c1917;
+  --color-paper: #faf6ef;
+  --color-stone: #f1e9db;
+  --font-display: var(--font-display-serif), Georgia, "Times New Roman", serif;
+}
+
+:root {
+  --ink-950: #14110f;
+  --ink-900: #1c1917;
+  --ink-800: #2b2622;
+  --ink-700: #3a332d;
+  --gold-700: #8a6a2b;
+  --gold: #b8975a;
+  --cream: #f1e9db;
+  --ivory: #faf6ef;
+  --line: #e4dccd;
+  --muted: #6b6258;
+}
+
+html {
+  scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  background: var(--ivory);
+  color: var(--ink-900);
+}
+
+body > * {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  min-width: 0;
+}
+
+::selection {
+  background: var(--ink-700);
+  color: #fff;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+input,
+textarea,
+select {
+  border-radius: 0 !important;
+  border-color: var(--line) !important;
+  background-color: #fffdf9 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--gold-700) !important;
+  outline: 2px solid rgba(138, 106, 43, 0.2);
+  outline-offset: 1px;
+}
+
+/* Theme existing shared utility surfaces without changing component structure. */
+[class~="bg-white"] {
+  background-color: #fffdf9;
+}
+[class*="bg-[#faf6ef]"] {
+  background-color: var(--ivory);
+}
+[class*="bg-[#f7f3eb]"],
+[class*="bg-[#f1e9db]"],
+[class*="bg-[#f1e9db]"] {
+  background-color: var(--cream);
+}
+[class~="bg-neutral-950"],
+[class*="bg-[#1c1917]"],
+[class*="bg-[#1c1917]"] {
+  background-color: var(--ink-900);
+}
+[class~="bg-neutral-950"]:hover,
+[class*="bg-[#1c1917]"]:hover,
+[class*="bg-[#1c1917]"]:hover {
+  background-color: var(--ink-700);
+}
+
+[class~="border-neutral-200"],
+[class~="border-neutral-300"],
+[class~="border-gray-200"],
+[class~="border-gray-100"] {
+  border-color: var(--line);
+}
+[class~="border-neutral-950"],
+[class~="border-gray-900"] {
+  border-color: var(--ink-900);
+}
+[class~="text-neutral-950"],
+[class~="text-neutral-900"],
+[class~="text-gray-900"],
+[class~="text-black"] {
+  color: var(--ink-900);
+}
+[class~="text-neutral-700"],
+[class~="text-gray-700"],
+[class~="text-slate-700"] {
+  color: var(--ink-800);
+}
+[class~="text-neutral-600"],
+[class~="text-gray-600"],
+[class~="text-slate-600"] {
+  color: var(--muted);
+}
+[class~="text-neutral-500"],
+[class~="text-gray-500"],
+[class~="text-slate-500"] {
+  color: #7d7366;
+}
+[class~="text-amber-400"],
+[class~="text-yellow-400"] {
+  color: var(--gold);
+}
+[class~="bg-gray-100"],
+[class~="bg-gray-50"],
+[class~="bg-neutral-100"] {
+  background-color: #f3ede2;
+}
+[class~="border"][class~="bg-white"] {
+  box-shadow: 0 10px 28px rgba(28, 25, 23, 0.055);
+}
+[class~="border"][class~="bg-white"]:hover {
+  border-color: #cdbf9f;
+}
+[class*="shadow-[0_20px"],
+[class*="shadow-[0_18px"],
+[class*="shadow-[0_16px"] {
+  box-shadow: 0 16px 38px rgba(28, 25, 23, 0.12);
+}
+
+main a:not([class*="bg-"]):focus-visible,
+nav a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--gold-700);
+  outline-offset: 3px;
+}
+
+/* Editorial display type for headings. Body copy stays in the sans face. */
+h1,
+h2,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
