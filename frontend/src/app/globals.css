@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #1c1917;
-  --color-paper: #faf6ef;
-  --color-stone: #f1e9db;
+  --color-ink: #171717;
+  --color-paper: #f7f7f5;
+  --color-stone: #ededeb;
   --font-display: var(--font-display-serif), Georgia, "Times New Roman", serif;
 }
 
 :root {
-  --ink-950: #14110f;
-  --ink-900: #1c1917;
-  --ink-800: #2b2622;
-  --ink-700: #3a332d;
-  --gold-700: #8a6a2b;
-  --gold: #b8975a;
-  --cream: #f1e9db;
-  --ivory: #faf6ef;
-  --line: #e4dccd;
-  --muted: #6b6258;
+  --ink-950: #101010;
+  --ink-900: #171717;
+  --ink-800: #292929;
+  --ink-700: #3a3a3a;
+  --gold-700: #555555;
+  --gold: #777777;
+  --cream: #ededeb;
+  --ivory: #f7f7f5;
+  --line: #e5e5e2;
+  --muted: #686868;
 }
 
 html {
@@ -69,6 +69,17 @@ select {
   color: #fff;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 button,
 a,
 input,
@@ -87,7 +98,7 @@ textarea,
 select {
   border-radius: 0 !important;
   border-color: var(--line) !important;
-  background-color: #fffdf9 !important;
+  background-color: #fff !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
 }
 
@@ -95,13 +106,13 @@ input:focus,
 textarea:focus,
 select:focus {
   border-color: var(--gold-700) !important;
-  outline: 2px solid rgba(138, 106, 43, 0.2);
+  outline: 2px solid rgba(23, 23, 23, 0.18);
   outline-offset: 1px;
 }
 
 /* Theme existing shared utility surfaces without changing component structure. */
 [class~="bg-white"] {
-  background-color: #fffdf9;
+  background-color: #fff;
 }
 [class*="bg-[#faf6ef]"] {
   background-color: var(--ivory);
@@ -111,6 +122,13 @@ select:focus {
 [class*="bg-[#f1e9db]"] {
   background-color: var(--cream);
 }
+[class*="bg-[#fffdf9]"],
+[class*="bg-[#fffdf9]/"] {
+  background-color: #fff;
+}
+[class*="bg-[#f3ede2]"] {
+  background-color: #f2f2f0;
+}
 [class~="bg-neutral-950"],
 [class*="bg-[#1c1917]"],
 [class*="bg-[#1c1917]"] {
@@ -119,6 +137,13 @@ select:focus {
 [class~="bg-neutral-950"]:hover,
 [class*="bg-[#1c1917]"]:hover,
 [class*="bg-[#1c1917]"]:hover {
+  background-color: var(--ink-700);
+}
+[class*="bg-[#8a6a2b]"],
+[class*="bg-[#b8975a]"] {
+  background-color: var(--ink-900);
+}
+[class*="bg-[#6f5422]"]:hover {
   background-color: var(--ink-700);
 }
 
@@ -131,6 +156,19 @@ select:focus {
 [class~="border-neutral-950"],
 [class~="border-gray-900"] {
   border-color: var(--ink-900);
+}
+[class*="border-[#e4dccd]"],
+[class*="border-[#d8d3cd]"],
+[class*="border-[#ece8e2]"],
+[class*="border-[#b8975a]"],
+[class*="hover:border-[#b8975a]"]:hover {
+  border-color: var(--line);
+}
+[class*="text-[#8a6a2b]"],
+[class*="text-[#b8975a]"],
+[class*="hover:text-[#8a6a2b]"],
+[class*="hover:text-[#8a6a2b]"]:hover {
+  color: #555;
 }
 [class~="text-neutral-950"],
 [class~="text-neutral-900"],
@@ -151,7 +189,7 @@ select:focus {
 [class~="text-neutral-500"],
 [class~="text-gray-500"],
 [class~="text-slate-500"] {
-  color: #7d7366;
+  color: #777;
 }
 [class~="text-amber-400"],
 [class~="text-yellow-400"] {
@@ -160,13 +198,13 @@ select:focus {
 [class~="bg-gray-100"],
 [class~="bg-gray-50"],
 [class~="bg-neutral-100"] {
-  background-color: #f3ede2;
+  background-color: #f2f2f0;
 }
 [class~="border"][class~="bg-white"] {
   box-shadow: 0 10px 28px rgba(28, 25, 23, 0.055);
 }
 [class~="border"][class~="bg-white"]:hover {
-  border-color: #cdbf9f;
+  border-color: #bdbdb9;
 }
 [class*="shadow-[0_20px"],
 [class*="shadow-[0_18px"],
@@ -183,7 +221,10 @@ button:focus-visible {
 
 /* Editorial display type for headings. Body copy stays in the sans face. */
 h1,
-h2,
+h2 {
+  letter-spacing: -0.02em;
+}
+
 .font-display {
   font-family: var(--font-display);
   letter-spacing: -0.01em;

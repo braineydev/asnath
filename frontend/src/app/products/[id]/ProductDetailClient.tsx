@@ -196,9 +196,9 @@ export default function ProductDetailClient({
           <span className="text-gray-700">{product.name}</span>
         </nav>
 
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="overflow-hidden border border-neutral-200 bg-[#f1e9db] p-3">
-            <div className="relative h-105 md:h-140 w-full overflow-hidden">
+        <div className="grid items-start gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
+          <div className="overflow-hidden bg-[#f1e9db]">
+            <div className="relative aspect-[4/5] w-full overflow-hidden">
               <img
                 src={getProductImageSrc(imageUrl)}
                 alt={product.name}
@@ -208,14 +208,14 @@ export default function ProductDetailClient({
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 lg:sticky lg:top-24">
             <div className="border border-neutral-200 bg-white p-6">
               <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-500">
                 {typeof product.category === "string"
                   ? product.category
                   : product.category?.name || categoryLabel || "Accessories"}
               </p>
-              <h1 className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-[#1c1917] md:text-4xl">
+              <h1 className="font-display mt-3 text-3xl font-medium tracking-[-0.03em] text-[#1c1917] md:text-4xl">
                 {product.name}
               </h1>
 
@@ -227,7 +227,7 @@ export default function ProductDetailClient({
                 )}
               </div>
 
-              <div className="mt-5 border-t border-neutral-200 pt-5">
+              <div className="mt-4 border-t border-neutral-200 pt-4">
                 <p className="text-sm leading-6 text-neutral-600">
                   {previewDescription}
                 </p>
@@ -304,7 +304,7 @@ export default function ProductDetailClient({
                 <button
                   onClick={handleBuyNow}
                   disabled={availableStock < 1}
-                  className="flex-1 inline-flex items-center justify-center bg-[#d97706] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-[#b45309] disabled:bg-neutral-400"
+                className="flex-1 inline-flex items-center justify-center bg-[#8a6a2b] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-[#6f5422] disabled:bg-neutral-400"
                 >
                   Buy Now
                 </button>
@@ -343,7 +343,7 @@ export default function ProductDetailClient({
           <button
             onClick={handleBuyNow}
             disabled={availableStock < 1}
-            className="flex-1 flex items-center justify-center bg-[#d97706] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-[#b45309] disabled:bg-neutral-400"
+            className="flex-1 flex items-center justify-center bg-[#8a6a2b] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-[#6f5422] disabled:bg-neutral-400"
           >
             Buy Now
           </button>

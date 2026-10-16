@@ -10,6 +10,7 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [cartNotice, setCartNotice] = useState(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -19,6 +20,7 @@ export function CartProvider({ children }) {
       // ignore malformed storage
     }
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     if (typeof window !== "undefined") {

@@ -10,6 +10,7 @@ export default function CartNotice() {
   const [stage, setStage] = useState("hidden");
   const [targetStyle, setTargetStyle] = useState(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!cartNotice || cart.length === 0) {
       setStage("hidden");
@@ -51,12 +52,8 @@ export default function CartNotice() {
       window.clearTimeout(flyTimeout);
       window.clearTimeout(hideTimeout);
     };
-
-    return () => {
-      window.clearTimeout(expandTimeout);
-      window.clearTimeout(flyTimeout);
-    };
-  }, [cartNotice, cart.length]);
+  }, [cartNotice, cart.length, dismissCartNotice]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const noticeStyle = useMemo(() => {
     const base = {

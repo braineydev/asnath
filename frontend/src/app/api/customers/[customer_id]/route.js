@@ -26,7 +26,7 @@ export async function PUT(request, { params }) {
     .from("profiles")
     .update({ role: updatedRole })
     .eq("id", resolvedParams.customer_id)
-    .select("id, full_name, role, phone, email")
+    .select("id, full_name, role, phone, created_at")
     .maybeSingle();
 
   if (error) {
@@ -36,7 +36,16 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ error: "Customer not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ customer: data });
+  const { data: authUser, error: authError } =
+    await supabase.auth.admin.getUserById(data.id);
+
+  if (authError) {
+    return NextResponse.json({ error: authError.message }, { status: 500 });
+  }
+
+  return NextResponse.json({
+    customer: { ...data, email: authUser.user?.email || "-" },
+  });
 }
 
 export async function DELETE(request, { params }) {

@@ -1,18 +1,12 @@
 "use client";
-import {
-  LogOut,
-  Menu,
-  Search,
-  ShieldCheck,
-  ShoppingBag,
-  User,
-  X,
-} from "lucide-react";
+
+import { ChevronDown, LogOut, Menu, Search, ShieldCheck, ShoppingBag, User, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useSearch } from "../context/SearchContext";
 
 const categoryLinks = [
   { label: "Earrings", href: "/?category=earrings#shop", category: "earrings" },
@@ -26,209 +20,96 @@ const categoryLinks = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
   const pathname = usePathname();
-  const [categoryParam, setCategoryParam] = useState("");
   const { getCartCount } = useCart();
+  const { user, logout } = useAuth();
+  const { searchTerm, setSearchTerm, suggestions, categories } = useSearch();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [collectionsOpen, setCollectionsOpen] = useState(false);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const collectionsRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+  const searchRef = useRef(null);
+  const isAdmin = Boolean(user?.role === "admin" || user?.user_metadata?.role === "admin" || user?.isAdmin);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    setCategoryParam(params.get("category") || "");
-
-    const handlePopState = () => {
-      const nextParams = new URLSearchParams(window.location.search);
-      setCategoryParam(nextParams.get("category") || "");
+    const closeOutside = event => {
+      if (!collectionsRef.current?.contains(event.target) && !mobileMenuRef.current?.contains(event.target)) setCollectionsOpen(false);
+      if (!searchRef.current?.contains(event.target)) setSuggestionsOpen(false);
     };
+    const closeOnEscape = event => {
+      if (event.key === "Escape") {
+        setCollectionsOpen(false);
+        setSuggestionsOpen(false);
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
 
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, [pathname]);
-  const { user, logout } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const isAdmin = Boolean(
-    user?.role === "admin" ||
-    user?.user_metadata?.role === "admin" ||
-    user?.isAdmin,
-  );
-
-  const activeLink = (href, category) => {
-    if (href === "/#shop" && pathname === "/" && !categoryParam) return true;
-    if (category && pathname === "/" && categoryParam === category) return true;
-    if (href === "/admin" && pathname === "/admin") return true;
-    if (href === "/cart" && pathname === "/cart") return true;
-    if (href === "/login" && pathname === "/login") return true;
-    return false;
+  const submitSearch = event => {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    router.push(query ? `/?search=${encodeURIComponent(query)}#shop` : "/#shop");
+    setSuggestionsOpen(false);
+    setMenuOpen(false);
   };
 
+  const renderCollections = (mobile = false) => (
+    <div className={mobile ? "grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[#e5e5e2] pt-3" : "absolute left-0 top-full z-50 grid min-w-56 border border-[#e5e5e2] bg-white py-2 shadow-[0_8px_24px_rgba(0,0,0,0.1)]"}>
+      {(categories.length ? categories.map(category => ({ label: category.name, href: `/?category=${encodeURIComponent(category.slug)}#shop`, key: category.id })) : categoryLinks.map(link => ({ label: link.label, href: link.href, key: link.category }))).map(link => <Link key={link.key} href={link.href} onClick={() => { setCollectionsOpen(false); setMenuOpen(false); }} className={mobile ? "py-1 text-sm text-[#666] hover:text-[#111]" : "px-5 py-2.5 text-sm text-[#666] hover:bg-[#f2f2f0] hover:text-[#111]"}>{link.label}</Link>)}
+    </div>
+  );
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-[#e4dccd] bg-[#faf6ef]/95 shadow-[0_4px_20px_rgba(28,25,23,0.06)] backdrop-blur-md">
-      <div className="mx-auto max-w-full w-full px-5 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="flex flex-wrap items-center justify-between gap-2 h-16">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <Link
-              href="/"
-              className="font-display shrink-0 text-xl font-semibold tracking-[0.28em] text-[#1c1917] transition-colors hover:text-[#8a6a2b] sm:text-2xl"
-            >
-              ASNATH
-            </Link>
+    <header className="sticky top-0 z-50 bg-white">
+      <div className="mx-auto flex min-h-[4.75rem] max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6 md:grid md:grid-cols-[150px_minmax(260px,1fr)_150px] md:gap-6 md:py-4">
+        <Link href="/" className="font-display order-1 shrink-0 text-xl font-semibold tracking-[0.22em] text-[#1c1917] sm:text-2xl">ASNATH</Link>
 
-            <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
-              <Link
-                href="/#shop"
-                className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.16em] text-[#1c1917] transition-colors hover:text-[#8a6a2b]"
-              >
-                Shop
-              </Link>
-            </div>
-          </div>
-
-          <div className="hidden items-center gap-5 xl:gap-6 lg:flex">
-            <Link
-              href="/#shop"
-              className={`pb-1 text-[11px] font-bold uppercase tracking-[0.12em] transition-colors hover:text-[#8a6a2b] ${
-                activeLink("/#shop")
-                  ? "border-b-2 border-[#b8975a] text-[#1c1917]"
-                  : "text-[#6b6258]"
-              }`}
-            >
-              Shop
-            </Link>
-            {categoryLinks.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`pb-1 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors hover:text-[#1c1917] ${
-                  activeLink(link.href, link.category)
-                    ? "border-b-2 border-[#b8975a] text-[#1c1917]"
-                    : "text-[#6b6258]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-1 sm:gap-2">
-            <a
-              href="/#shop"
-              className="hidden h-10 w-10 items-center justify-center text-[#1c1917] transition-colors hover:text-[#8a6a2b] sm:inline-flex"
-              aria-label="Search products"
-            >
-              <Search size={18} strokeWidth={1.7} />
-            </a>
-
-            {isAdmin && (
-              <Link
-                href="/admin"
-                className={`inline-flex h-9 items-center gap-1.5 border-l border-black/[0.09] px-3 text-xs font-medium uppercase tracking-[0.1em] transition-colors hover:text-neutral-950 ${
-                  activeLink("/admin")
-                    ? "border-b-2 border-[#b8975a] text-[#1c1917]"
-                    : "text-neutral-600"
-                }`}
-                title="Admin dashboard"
-              >
-                <ShieldCheck size={16} />
-                <span className="hidden sm:inline">Admin</span>
-              </Link>
-            )}
-
-            <Link
-              href="/cart"
-              id="nav-cart-icon"
-              className={`relative inline-flex h-10 w-10 items-center justify-center ${
-                activeLink("/cart")
-                  ? "border-b-2 border-[#b8975a] text-[#1c1917]"
-                  : "text-[#1c1917]"
-              }`}
-              aria-label={`Shopping bag${getCartCount() ? `, ${getCartCount()} items` : ""}`}
-            >
-              <ShoppingBag size={20} strokeWidth={1.7} />
-              {getCartCount() > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#8a6a2b] px-1 text-[9px] font-bold leading-none text-white shadow-[0_2px_6px_rgba(28,25,23,0.25)]">
-                  {getCartCount()}
-                </span>
-              )}
-            </Link>
-
-            {user ? (
-              <div className="flex items-center">
-                <button
-                  onClick={logout}
-                  className="inline-flex h-10 w-10 items-center justify-center text-neutral-500 transition-colors hover:text-neutral-950"
-                  title="Log out"
-                  aria-label="Log out"
-                >
-                  <LogOut size={18} strokeWidth={1.7} />
-                  <span className="sr-only">Log out</span>
-                </button>
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className={`inline-flex h-10 w-10 items-center justify-center transition-colors hover:text-neutral-500 ${
-                  activeLink("/login")
-                    ? "border-b-2 border-[#b8975a] text-[#1c1917]"
-                    : "text-neutral-900"
-                }`}
-                aria-label="Sign in"
-              >
-                <User size={19} strokeWidth={1.7} />
-              </Link>
-            )}
-            <button
-              type="button"
-              onClick={() => setMenuOpen(open => !open)}
-              className="inline-flex h-10 w-9 items-center justify-center text-neutral-900 lg:hidden"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-            >
-              {menuOpen ? (
-                <X size={20} strokeWidth={1.7} />
-              ) : (
-                <Menu size={20} strokeWidth={1.7} />
-              )}
-            </button>
-          </div>
+        <div ref={searchRef} className="order-3 relative w-full md:order-2 md:w-auto">
+          <form onSubmit={submitSearch} role="search" className="flex h-10 w-full border border-[#d8d8d5] bg-white">
+            <input value={searchTerm} onChange={event => { setSearchTerm(event.target.value); setSuggestionsOpen(true); }} onFocus={() => setSuggestionsOpen(Boolean(suggestions.length))} placeholder="Enter key to search" aria-label="Search products" className="min-w-0 flex-1 border-0 bg-transparent px-3 text-xs text-[#1c1917] shadow-none outline-none focus:outline-none" />
+            <button type="submit" aria-label="Submit search" className="flex w-10 shrink-0 items-center justify-center text-[#555] hover:text-[#111]"><Search size={15} strokeWidth={1.6} /></button>
+          </form>
+          {pathname === "/" && suggestionsOpen && searchTerm.trim() && suggestions.length > 0 && <div className="absolute left-0 right-0 top-full z-[60] border border-t-0 border-[#d8d8d5] bg-white shadow-sm">
+            {suggestions.slice(0, 5).map(product => <Link key={product.id} href={`/products/${product.slug || product.id}`} onClick={() => { setSuggestionsOpen(false); setMenuOpen(false); }} className="block border-t border-[#eee] px-3 py-2.5 text-sm text-[#333] hover:bg-[#f5f5f3]">{product.name}</Link>)}
+          </div>}
         </div>
-        {menuOpen && (
-          <div className="border-t border-neutral-200 py-4 lg:hidden">
-            <div className="grid grid-cols-2 gap-y-4 text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-700">
-              <Link
-                href="/"
-                onClick={() => setMenuOpen(false)}
-                className={`transition-colors ${
-                  activeLink("/", "") ? "text-[#1c1917]" : "text-[#6b6258]"
-                }`}
-              >
-                Home
-              </Link>
-              <Link
-                href="/#shop"
-                onClick={() => setMenuOpen(false)}
-                className={`transition-colors ${
-                  activeLink("/#shop") ? "text-[#1c1917]" : "text-[#6b6258]"
-                }`}
-              >
-                Shop
-              </Link>
-              {categoryLinks.map(link => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`transition-colors ${
-                    activeLink(link.href, link.category)
-                      ? "text-[#1c1917]"
-                      : "text-[#6b6258]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+
+        <div className="order-2 ml-auto flex items-center gap-1 sm:gap-2 md:order-3 md:ml-0 md:justify-end">
+          {isAdmin && <Link href="/admin" aria-label="Admin dashboard" title="Admin dashboard" className="inline-flex h-9 items-center justify-center gap-1.5 px-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#1c1917]"><ShieldCheck size={16} /><span>Admin</span></Link>}
+          <Link href="/cart" aria-label={`Shopping bag${getCartCount() ? `, ${getCartCount()} items` : ""}`} className="relative inline-flex h-9 w-9 items-center justify-center text-[#1c1917]"><ShoppingBag size={17} strokeWidth={1.6} />{getCartCount() > 0 && <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center bg-[#171717] px-1 text-[9px] text-white">{getCartCount()}</span>}</Link>
+          {user ? <button onClick={logout} aria-label="Log out" title="Log out" className="inline-flex h-9 w-8 items-center justify-center text-[#1c1917]"><LogOut size={16} /></button> : <Link href="/login" aria-label="Sign in" className="hidden h-9 w-8 items-center justify-center text-[#1c1917] sm:inline-flex"><User size={16} /></Link>}
+          <button type="button" onClick={() => setMenuOpen(open => !open)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} className="inline-flex h-9 w-8 items-center justify-center text-[#1c1917] md:hidden">{menuOpen ? <X size={18} /> : <Menu size={18} />}</button>
+        </div>
       </div>
-    </nav>
+
+      <nav className="hidden h-10 items-center justify-center gap-9 border-b border-[#e5e5e2] md:flex" aria-label="Main navigation">
+        <Link href="/" className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#1c1917] hover:underline">Home</Link>
+        <div ref={collectionsRef} className="relative flex h-full items-center" onMouseEnter={() => setCollectionsOpen(true)} onMouseLeave={() => setCollectionsOpen(false)}>
+          <button type="button" onClick={() => setCollectionsOpen(true)} aria-expanded={collectionsOpen} className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#1c1917]">Collections <ChevronDown size={12} className={`transition-transform ${collectionsOpen ? "rotate-180" : ""}`} /></button>
+          {collectionsOpen && renderCollections()}
+        </div>
+        <Link href="/contact" className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#1c1917] hover:underline">Contact us</Link>
+      </nav>
+
+      {menuOpen && <div ref={mobileMenuRef} className="border-b border-[#e5e5e2] bg-white px-5 py-4 md:hidden">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-4 text-[11px] font-medium uppercase tracking-[0.1em]">
+          <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link href="/about" onClick={() => setMenuOpen(false)}>About</Link>
+          <Link href="/contact" onClick={() => setMenuOpen(false)}>Contact us</Link>
+          {isAdmin && <Link href="/admin" onClick={() => setMenuOpen(false)}>Admin</Link>}
+          {!user && <Link href="/login" onClick={() => setMenuOpen(false)}>Sign in</Link>}
+          <button type="button" onClick={() => setCollectionsOpen(open => !open)} aria-expanded={collectionsOpen} className="inline-flex items-center gap-1 text-left">Collections <ChevronDown size={12} /></button>
+          {collectionsOpen && <div className="col-span-2">{renderCollections(true)}</div>}
+        </div>
+      </div>}
+    </header>
   );
 }

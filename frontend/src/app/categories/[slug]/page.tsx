@@ -47,6 +47,8 @@ type Product = {
   name: string;
   slug?: string;
   price: number | string;
+  initial_price?: number | string;
+  discounted_price?: number | string;
   stock?: number;
   images?: string[];
 };
@@ -153,14 +155,14 @@ export default async function CategoryPage({
   };
 
   return (
-    <main className="min-h-screen bg-[#faf6ef] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+    <main className="min-h-screen bg-[#faf6ef] px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1440px]">
         <nav
-          className="mb-10 text-xs uppercase tracking-[0.12em] text-neutral-500"
+          className="mb-7 text-[10px] uppercase tracking-[0.12em] text-neutral-500"
           aria-label="Breadcrumb"
         >
           <Link href="/" className="hover:text-black">
@@ -170,13 +172,15 @@ export default async function CategoryPage({
           <span className="text-gray-700">{category.name}</span>
         </nav>
 
-        <div className="mb-12 border-b border-neutral-200 pb-8">
-          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-500">
-            Category
+        <div className="mb-7 flex flex-col justify-between gap-3 border-b border-neutral-200 pb-5 sm:flex-row sm:items-end">
+          <div>
+          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[#8a6a2b]">
+            Shop category
           </p>
-          <h1 className="mt-3 text-4xl font-medium tracking-[-0.05em] text-neutral-950 sm:text-5xl">
+          <h1 className="font-display mt-2 text-3xl font-medium tracking-[-0.04em] text-neutral-950 sm:text-4xl">
             {category.name}
           </h1>
+          </div>
           <p className="mt-4 max-w-2xl text-base leading-7 text-neutral-600">
             {category.description ||
               `Discover ${category.name.toLowerCase()} from Asnath.`}
@@ -188,12 +192,12 @@ export default async function CategoryPage({
             No products are available in this category right now.
           </div>
         ) : (
-          <div className="grid gap-x-5 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-5 sm:gap-y-8 lg:grid-cols-3 xl:grid-cols-4">
             {products.map(product => (
               <Link
                 key={product.id}
                 href={`/products/${product.slug || product.id}`}
-                className="group overflow-hidden border border-neutral-200 bg-white transition hover:border-neutral-400"
+                className="group overflow-hidden border border-[#e4dccd] bg-[#fffdf9] transition-colors hover:border-[#b8975a]"
               >
                 <div className="relative aspect-square bg-[#f1e9db]">
                   <img
@@ -201,17 +205,23 @@ export default async function CategoryPage({
                       getSafeImageUrl(product.images?.[0]),
                     )}
                     alt={product.name}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     loading="lazy"
                   />
                 </div>
-                <div className="p-5">
-                  <h2 className="text-base font-medium text-neutral-950">
+                <div className="p-3 sm:p-4">
+                  <h2 className="line-clamp-2 text-sm font-medium text-neutral-950 sm:text-base">
                     {product.name}
                   </h2>
-                  <p className="mt-2 text-sm text-neutral-600">
-                    Ksh. {Number(product.price || 0).toLocaleString()}
-                  </p>
+                  {(() => {
+                    const price = Number(product.discounted_price ?? product.price ?? 0);
+                    const originalPrice = Number(product.initial_price ?? price);
+                    const onSale = originalPrice > price;
+                    return <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-sm text-neutral-600">
+                      <span className="font-medium text-neutral-950">Ksh. {price.toLocaleString()}</span>
+                      {onSale && <span className="text-xs text-neutral-500 line-through">Ksh. {originalPrice.toLocaleString()}</span>}
+                    </p>;
+                  })()}
                 </div>
               </Link>
             ))}

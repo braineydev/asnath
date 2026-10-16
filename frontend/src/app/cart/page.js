@@ -3,7 +3,7 @@
 import { ArrowLeft, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { getProductPrimaryImage } from "../../lib/product-image-utils";
 
@@ -26,12 +26,10 @@ export default function CartPage() {
   const router = useRouter();
   const { cart, updateQuantity, removeFromCart, getCartTotal, getCartCount } =
     useCart();
-  const [lastViewedProduct, setLastViewedProduct] = useState(null);
-
-  useEffect(() => {
-    const productId = sessionStorage.getItem("lastViewedProduct");
-    setLastViewedProduct(productId);
-  }, []);
+  const [lastViewedProduct] = useState(() => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem("lastViewedProduct");
+  });
 
   const handleBack = () => {
     if (lastViewedProduct) {
@@ -49,19 +47,18 @@ export default function CartPage() {
   if (cart.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6 lg:px-8">
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[1.5rem] border border-neutral-200 bg-[#f7f3eb] text-neutral-600">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center border border-neutral-200 bg-[#f7f3eb] text-neutral-600">
           <ShoppingBag size={40} />
         </div>
         <h1 className="mb-4 text-3xl font-medium tracking-[-0.05em] text-neutral-950">
           Your cart is empty
         </h1>
         <p className="mx-auto mb-8 max-w-md text-gray-500">
-          Looks like you haven't added anything to your cart yet. Explore our
-          premium catalog to find your next tech upgrade.
+          Looks like you have not added anything to your bag yet. Browse the collection to find a piece you love.
         </p>
         <Link
           href="/"
-          className="inline-flex items-center rounded-full bg-[#1c1917] px-8 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition-colors hover:bg-neutral-700"
+          className="inline-flex items-center bg-[#1c1917] px-8 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition-colors hover:bg-neutral-700"
         >
           Start Shopping
         </Link>
@@ -101,7 +98,7 @@ export default function CartPage() {
             {cart.map(item => (
               <div
                 key={item.id}
-                className="flex gap-4 border border-neutral-200 bg-white p-3 sm:gap-6 sm:p-5"
+                className="flex gap-4 border border-neutral-200 bg-[#fffdf9] p-3 sm:gap-6 sm:p-5"
               >
                 <div className="relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden bg-[#f1e9db] sm:h-36 sm:w-36">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -219,7 +216,7 @@ export default function CartPage() {
 
               <div className="mb-8 flex items-center justify-between">
                 <span className="text-lg font-bold text-gray-900">Total</span>
-                <span className="text-3xl font-extrabold text-gray-900">
+                <span className="text-2xl font-medium text-gray-900">
                   Ksh. {total.toLocaleString()}
                 </span>
               </div>

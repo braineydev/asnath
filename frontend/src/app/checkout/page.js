@@ -101,7 +101,7 @@ export default function CheckoutPage() {
         </p>
         <button
           onClick={() => router.push("/")}
-          className="rounded-full bg-[#1c1917] px-10 py-4 font-bold text-white transition-colors hover:bg-gray-800"
+          className="bg-[#1c1917] px-10 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition-colors hover:bg-gray-800"
           type="button"
         >
           Continue Shopping
@@ -147,7 +147,7 @@ export default function CheckoutPage() {
                   </span>
                   Delivery Details
                 </h2>
-                <div className="space-y-4 rounded-[2rem] border border-neutral-200 bg-[#faf6ef] p-6">
+                <div className="space-y-4 border border-neutral-200 bg-[#faf6ef] p-6">
                   <div>
                     <label className="mb-2 block text-sm font-medium text-gray-700">
                       Full Name
@@ -158,7 +158,7 @@ export default function CheckoutPage() {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-black"
+                      className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-black"
                       placeholder="Alex Mwaura"
                     />
                   </div>
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
                       rows="3"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
+                      className="w-full border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
                       placeholder="Kawangware Junction, Nairobi"
                     />
                   </div>
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
+                      className="w-full border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
                       placeholder="+2547XXXXXXXX"
                     />
                   </div>
@@ -202,7 +202,7 @@ export default function CheckoutPage() {
                       rows="3"
                       value={formData.notes}
                       onChange={handleInputChange}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
+                      className="w-full border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
                       placeholder="Deliver Using Super Metro"
                     />
                   </div>

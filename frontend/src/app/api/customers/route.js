@@ -17,12 +17,36 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, role, phone, email")
+    .select("id, full_name, role, phone, created_at")
     .order("full_name");
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ customers: data });
+  const authUsers = new Map();
+  let page = 1;
+
+  while (true) {
+    const { data: usersPage, error: usersError } =
+      await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+
+    if (usersError) {
+      return NextResponse.json({ error: usersError.message }, { status: 500 });
+    }
+
+    for (const authUser of usersPage.users || []) {
+      authUsers.set(authUser.id, authUser.email || "-");
+    }
+
+    if (!usersPage.nextPage) break;
+    page = usersPage.nextPage;
+  }
+
+  return NextResponse.json({
+    customers: (data || []).map(profile => ({
+      ...profile,
+      email: authUsers.get(profile.id) || "-",
+    })),
+  });
 }
