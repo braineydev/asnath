@@ -56,17 +56,17 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: "Product not found | Asnath",
+      title: "Product not found | Aseni",
       description: "The requested product could not be found.",
       alternates: { canonical: `/products/${resolvedParams.id}` },
     };
   }
 
-  const title = product.meta_title || `${product.name} | Asnath`;
+  const title = product.meta_title || `${product.name} | Aseni`;
   const description =
     product.meta_description ||
     product.description ||
-    `Shop ${product.name} at Asnath.`;
+    `Shop ${product.name} at Aseni.`;
   const image =
     product.images?.[0] ||
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=80";

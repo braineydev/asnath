@@ -1,16 +1,22 @@
 # Vercel deployment
 
-The `frontend/` directory is the complete web application: its Next.js Route
-Handlers expose the same-origin `/api/*` endpoints and connect directly to
-Supabase. It does not proxy API requests to Render.
+The root `vercel.json` configures two services from this monorepo:
 
-## Configure Vercel
+- `frontend` runs the Next.js storefront and is the only public service. Its
+  Route Handlers own the same-origin `/api/*` endpoints and connect directly to
+  Supabase.
+- `ecommerce-platform-api` runs the legacy Express backend as an internal
+  service. The frontend currently makes no calls to it, so it has no public
+  rewrite and no service binding. Do not route `/api/*` to Express: that would
+  bypass the Next.js API handlers.
 
-Create a Vercel project from this repository with **Root Directory** set to
-`frontend`. Vercel detects Next.js and uses `npm run build` automatically.
+Create a Vercel project from the repository root and set its framework to
+**Services**. Do not set the project root to `frontend`; each service root is
+declared in `vercel.json`.
 
 Set these environment variables for Production, Preview, and Development as
-appropriate:
+appropriate. Configure the Supabase variables for the frontend service; the
+Express service also needs them if you plan to expose or call it later.
 
 | Variable | Required | Notes |
 | --- | --- | --- |

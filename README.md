@@ -1,6 +1,6 @@
-# Asnath
+# Aseni
 
-Asnath is a Kenyan accessories and jewellery store. It is a rebrand and redesign of an existing Next.js and Supabase e-commerce platform: the shopping, account, checkout and admin functionality is unchanged, and the storefront now has an ivory, charcoal and champagne-gold look with jewellery categories.
+Aseni is a Kenyan accessories and jewellery store. It is a rebrand and redesign of an existing Next.js and Supabase e-commerce platform: the shopping, account, checkout and admin functionality is unchanged, and the storefront now has a minimalist monochrome look with jewellery categories.
 
 ## Stack
 

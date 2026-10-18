@@ -1,10 +1,10 @@
-# Asnath setup guide
+# Aseni setup guide
 
 Status labels used below: **Implemented** (in the code), **Tested** (run in the build environment), **Manual** (you must do it).
 
 ## 1. What changed from the source project
 
-Implemented: new Asnath branding and wordmark, ivory/charcoal/gold theme, display serif for headings, announcement bar, new hero, jewellery categories in the navigation and sitemap, new logo and favicon assets, rewritten About, Contact, Terms and Privacy copy, and removal of the previous shop's phone numbers, address, map and WhatsApp number.
+Implemented: new Aseni branding and wordmark, monochrome theme, display serif for headings, announcement bar, new hero, jewellery categories in the navigation and sitemap, new logo and favicon assets, rewritten About, Contact, Terms and Privacy copy, and removal of the previous shop's phone numbers, address, map and WhatsApp number.
 
 Also changed, because they were not real data: the storefront, cart and product pages used to show star ratings and (in an unused card) "% OFF" badges generated from a hash of the product ID. Those are removed. Discount badges now appear only when a product has a stored `initial_price` higher than its `discounted_price`. The cart and checkout no longer say "Approx. KSh 200" for delivery; they say "Confirmed with your order".
 
@@ -18,7 +18,7 @@ Copy `frontend/.env.example` to `frontend/.env.local` (development) or add the v
 | --- | --- | --- | --- |
 | `SUPABASE_URL` | Server | Yes | Project URL. Supabase dashboard, Project Settings, API. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server | Yes | Privileged key, same page. Never expose it to the browser. |
-| `NEXT_PUBLIC_SITE_URL` | Public | Yes in production | Canonical URL, for example `https://asnath.example`. Used for metadata, sitemap and robots. |
+| `NEXT_PUBLIC_SITE_URL` | Public | Yes in production | Canonical URL, for example `https://aseni.example`. Used for metadata, sitemap and robots. |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | Public | Recommended | Digits only, international format (`2547XXXXXXXX`). Receives WhatsApp order and enquiry messages. |
 | `NEXT_PUBLIC_STORE_PHONE` | Public | Optional | Shown in footer and contact page. |
 | `NEXT_PUBLIC_STORE_EMAIL` | Public | Optional | Shown in footer and contact page. |
@@ -48,14 +48,14 @@ Then run the migrations in `backend/sql/`, in this order. All are written to be 
 | 1 | `20260713_add_product_brand.sql` | Adds `products.brand` and an index. |
 | 2 | `20260713_add_product_seo.sql` | Adds `slug`, `meta_title`, `meta_description`; back-fills slugs. |
 | 3 | `20260715_add_product_pricing_and_image_fields.sql` | Adds `initial_price`, `discounted_price`, `image_name`. |
-| 4 | `20260718_seed_store_categories.sql` | **Changed for Asnath.** Inserts the eight jewellery categories. Never deletes anything. |
-| 5 | `20260721_reconcile_catalogue_categories.sql` | **Changed for Asnath.** Adds the category index only. |
+| 4 | `20260718_seed_store_categories.sql` | **Changed for Aseni.** Inserts the eight jewellery categories. Never deletes anything. |
+| 5 | `20260721_reconcile_catalogue_categories.sql` | **Changed for Aseni.** Adds the category index only. |
 | 6 | `20260729_create_public_product_images_bucket.sql` | Creates the public `product-images` bucket (4 MB, jpeg/png/webp/avif) and a public read policy. |
 | 7 | `decrement_stock.sql` | Atomic stock decrement RPC used at checkout. |
 | 8 | `fix-product-permissions.sql` | Grants for `service_role`. |
 | 9 | `revoke_decrement_stock_execute.sql` | Stops anonymous callers running the stock RPC. Keep it. |
 
-Run them with `cd backend && npm install && npm run migrate` (executes every top-level `*.sql` in filename order), or paste them into the Supabase SQL editor in the order above.
+Run them with `cd backend && npm install && npm run migrate` (executes every top-level `*.sql` in filename order), or paste them into the Supabase SQL editor in the order above. The `20261016_add_brooches_category.sql` migration adds Brooches to an existing catalogue.
 
 Optional: `backend/sql/optional/enable_rls_lockdown.sql` enables Row Level Security on the application tables so the public anon key cannot read orders, profiles or carts through the REST API. The app uses the service-role key, which bypasses RLS, so it should not change behaviour, but it has not been run against a live database. Review it first. It is not run by `npm run migrate`.
 
@@ -109,7 +109,7 @@ node --test src/lib/auth-route-utils.test.js
 | `node --test src/lib/auth-route-utils.test.js` | 3 of 3 passed |
 | `npm run lint` | 13 errors, 5 warnings. The untouched source has the same 13 errors and 6 warnings, so none were introduced |
 | `next start` smoke test, 200 on `/`, `/about`, `/contact`, `/terms`, `/privacy`, `/login`, `/signup`, `/cart`, `/checkout`, `/admin`, `/sitemap.xml`, `/robots.txt` | Passed |
-| Rendered homepage contains Asnath wording and no previous brand, phone number or electronics categories | Passed |
+| Rendered homepage contains Aseni wording and no previous brand, phone number or electronics categories | Passed |
 
 ### What was not tested
 

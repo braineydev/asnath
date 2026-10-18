@@ -28,3 +28,6 @@ backend/dist/
 !.env.example
 !**/.env.example
 *.stackdump
+
+.vercel
+.env*

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Minus, Plus, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -54,7 +54,7 @@ export default function ProductDetailClient({
   const [quantity, setQuantity] = useState(1);
 
   const descriptionText =
-    product.description || "A piece from Asnath.";
+    product.description || "A piece from Aseni.";
   const availableStock = Math.max(0, Number(product.stock || 0));
   const discountedPrice = Number(
     product.discounted_price ?? product.price ?? 0,
@@ -144,7 +144,7 @@ export default function ProductDetailClient({
   };
 
   const WHATSAPP_NUMBER = STORE_WHATSAPP_NUMBER;
-  const DEFAULT_WHATSAPP_MESSAGE = `Hello Asnath, I have a question about this piece: ${product.name}`;
+  const DEFAULT_WHATSAPP_MESSAGE = `Hello Aseni, I have a question about this piece: ${product.name}`;
   const handleStartChat = () => {
     const encodedMessage = encodeURIComponent(DEFAULT_WHATSAPP_MESSAGE);
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER.replace(/[^0-9]/g, "")}?text=${encodedMessage}`;
@@ -159,27 +159,18 @@ export default function ProductDetailClient({
   };
 
   return (
-    <div className="min-h-screen bg-[#faf6ef]">
+    <main className="min-h-screen bg-white text-[#171717]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <div className="sticky top-4 z-40 mb-6 border-b border-neutral-200 bg-[#faf6ef]/95 px-4 py-3 backdrop-blur md:mb-8 md:px-6">
-        <button
-          onClick={() => router.push("/")}
-          className="w-fit inline-flex items-center text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-600 transition hover:text-neutral-950"
-        >
-          <ArrowLeft size={16} className="mr-2" /> Back to products
-        </button>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 pb-28 md:px-6 md:pb-16 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 pb-28 pt-4 md:px-6 md:pb-16 lg:px-8">
         <nav
-          className="mb-7 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-neutral-500"
+          className="mb-4 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.1em] text-neutral-500"
           aria-label="Breadcrumb"
         >
-          <Link href="/" className="hover:text-black">
-            Home
+          <Link href="/" className="inline-flex items-center gap-1.5 hover:text-black">
+            <ArrowLeft size={13} /> Shop
           </Link>
           {categorySlug ? (
             <>
@@ -196,9 +187,9 @@ export default function ProductDetailClient({
           <span className="text-gray-700">{product.name}</span>
         </nav>
 
-        <div className="grid items-start gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
-          <div className="overflow-hidden bg-[#f1e9db]">
-            <div className="relative aspect-[4/5] w-full overflow-hidden">
+        <div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-0">
+          <div className="overflow-hidden bg-[#f2f2f0] lg:mr-8">
+            <div className="relative aspect-[4/5] w-full overflow-hidden lg:aspect-[0.92/1]">
               <img
                 src={getProductImageSrc(imageUrl)}
                 alt={product.name}
@@ -208,26 +199,34 @@ export default function ProductDetailClient({
             </div>
           </div>
 
-          <div className="space-y-3 lg:sticky lg:top-24">
-            <div className="border border-neutral-200 bg-white p-6">
-              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-500">
+          <div className="lg:sticky lg:top-24 lg:pl-8 xl:pl-12">
+            <div className="border-b border-neutral-200 pb-5 pt-1">
+              <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-neutral-500">
                 {typeof product.category === "string"
                   ? product.category
                   : product.category?.name || categoryLabel || "Accessories"}
               </p>
-              <h1 className="font-display mt-3 text-3xl font-medium tracking-[-0.03em] text-[#1c1917] md:text-4xl">
+              <h1 className="mt-2 text-2xl font-medium tracking-[-0.03em] text-[#171717] sm:text-3xl">
                 {product.name}
               </h1>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2">
+              <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 {displayDiscountPercent > 0 && (
-                  <span className="inline-flex items-center border border-[#e4dccd] bg-[#f3ede2] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-[#6b6258]">
+                  <span className="text-[10px] uppercase tracking-[0.1em] text-neutral-500">
                     Save {displayDiscountPercent}%
+                  </span>
+                )}
+                <span className="text-2xl font-medium tracking-[-0.035em] sm:text-[28px]">
+                  KSh {discountedPrice.toLocaleString()}
+                </span>
+                {displayDiscountPercent > 0 && (
+                  <span className="text-sm text-neutral-400 line-through">
+                    KSh {Math.round(originalPrice).toLocaleString()}
                   </span>
                 )}
               </div>
 
-              <div className="mt-4 border-t border-neutral-200 pt-4">
+              <div className="mt-4">
                 <p className="text-sm leading-6 text-neutral-600">
                   {previewDescription}
                 </p>
@@ -235,7 +234,7 @@ export default function ProductDetailClient({
                   <button
                     type="button"
                     onClick={() => setShowFullDescription(!showFullDescription)}
-                    className="mt-3 text-sm font-semibold text-black underline-offset-4 hover:underline"
+                    className="mt-2 text-[10px] font-medium uppercase tracking-[0.12em] text-black underline underline-offset-4"
                   >
                     {showFullDescription ? "Show less" : "Show more"}
                   </button>
@@ -243,68 +242,56 @@ export default function ProductDetailClient({
               </div>
             </div>
 
-            <div className="border border-neutral-200 bg-white p-6">
-              <div className="flex items-end justify-between gap-3">
-                <div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-neutral-500">
-                    Price
-                  </p>
-                  <p className="mt-1 text-3xl font-medium tracking-[-0.04em] text-neutral-950">
-                    Ksh. {discountedPrice.toLocaleString()}
-                  </p>
-                  {displayDiscountPercent > 0 && (
-                    <p className="mt-1 text-sm text-gray-400 line-through">
-                      Ksh. {Math.round(originalPrice).toLocaleString()}
-                    </p>
-                  )}
-                </div>
-                <div className="border border-neutral-300 px-3 py-1 text-xs font-medium text-neutral-700">
+            <div className="border-b border-neutral-200 py-5">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs text-neutral-500">
                   {availableStock > 0
                     ? `${availableStock} in stock`
                     : "Out of stock"}
-                </div>
+                </span>
               </div>
 
-              <div className="mt-5 space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-                  Quantity
-                </p>
-                <div className="flex w-fit items-center gap-3 border border-neutral-200 bg-[#f1e9db] p-1">
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <div className="flex h-11 items-center border border-neutral-300">
                   <button
+                    type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="flex h-10 w-10 items-center justify-center transition-colors hover:bg-white"
+                    aria-label="Decrease quantity"
+                    className="flex h-10 w-10 items-center justify-center text-neutral-600 hover:text-black"
                   >
-                    −
+                    <Minus size={14} />
                   </button>
-                  <span className="w-8 text-center font-semibold text-black">
+                  <span className="w-8 text-center text-sm tabular-nums text-black">
                     {quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() =>
                       setQuantity(Math.min(availableStock, quantity + 1))
                     }
                     disabled={quantity >= availableStock}
-                    className="flex h-10 w-10 items-center justify-center transition-colors hover:bg-white"
+                    aria-label="Increase quantity"
+                    className="flex h-10 w-10 items-center justify-center text-neutral-600 hover:text-black disabled:opacity-30"
                   >
-                    +
+                    <Plus size={14} />
                   </button>
                 </div>
               </div>
 
-              <div className="mt-6 hidden md:flex lg:mt-6 gap-3">
+              <div className="mt-3 grid grid-cols-2 gap-2">
                 <button
                   onClick={handleAddToCart}
                   disabled={availableStock < 1}
-                  className="flex-1 inline-flex items-center justify-center bg-[#1c1917] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-neutral-700 disabled:bg-neutral-400"
+                  className="inline-flex min-h-12 items-center justify-center border border-[#171717] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.13em] text-[#171717] transition hover:bg-[#171717] hover:text-white disabled:border-neutral-300 disabled:text-neutral-400"
                 >
-                  <ShoppingBag size={18} strokeWidth={1.7} className="mr-2" />
-                  {availableStock < 1 ? "Out of stock" : "Add to cart"}
+                  <ShoppingBag size={16} strokeWidth={1.7} className="mr-2" />
+                  {availableStock < 1 ? "Out of stock" : "Add to bag"}
                 </button>
 
                 <button
                   onClick={handleBuyNow}
                   disabled={availableStock < 1}
-                className="flex-1 inline-flex items-center justify-center bg-[#8a6a2b] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-[#6f5422] disabled:bg-neutral-400"
+                  className="min-h-12 border border-[#171717] bg-[#171717] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-white hover:text-[#171717] disabled:border-neutral-300 disabled:bg-neutral-300"
                 >
                   Buy Now
                 </button>
@@ -313,42 +300,42 @@ export default function ProductDetailClient({
               <button
                 type="button"
                 onClick={handleStartChat}
-                className="mt-3 flex w-full items-center justify-center bg-[#25D366] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white shadow-[0_12px_28px_rgba(37,211,102,0.22)] transition hover:bg-[#20ba5a]"
+                className="mt-3 inline-flex min-h-10 items-center gap-2 text-xs text-neutral-600 transition hover:text-black"
               >
                 <svg
-                  className="w-5 h-5 mr-2"
+                  className="h-4 w-4"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.935 1.244c-1.5.867-2.798 2.154-3.632 3.761-1.647 3.282-.235 7.14 2.903 8.781 1.402.806 2.935 1.213 4.504 1.213 1.614 0 3.184-.436 4.605-1.284 3.122-1.837 4.56-5.66 3.233-8.938-.766-1.937-2.165-3.354-3.802-4.131-1.639-.778-3.535-.77-5.143.007m8.989-3.738h-.007a12.016 12.016 0 00-11.405 6.546 11.99 11.99 0 006.095 15.648 11.993 11.993 0 009.381-1.697 12.005 12.005 0 004.094-9.12 11.993 11.993 0 00-8.158-11.377m0-1.439A13.45 13.45 0 0012 .5C5.597.5.5 5.597.5 12S5.597 23.5 12 23.5s11.5-5.097 11.5-11.5S18.403.5 12 .5z" />
                 </svg>
-                WhatsApp Help
+                Ask us on WhatsApp
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-[#faf6ef]/95 p-3 backdrop-blur md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white/95 p-3 backdrop-blur md:hidden">
         <div className="flex items-center gap-3">
           <button
             onClick={handleAddToCart}
             disabled={availableStock < 1}
-            className="flex-1 flex items-center justify-center bg-[#1c1917] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-neutral-700 disabled:bg-neutral-400"
+            className="flex min-h-11 flex-1 items-center justify-center border border-[#171717] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.12em] text-[#171717] disabled:border-neutral-300 disabled:text-neutral-400"
           >
-            <ShoppingBag size={18} strokeWidth={1.7} className="mr-2" />
-            {availableStock < 1 ? "Out of stock" : "Add to cart"}
+            <ShoppingBag size={16} strokeWidth={1.7} className="mr-2" />
+            {availableStock < 1 ? "Out of stock" : "Add to bag"}
           </button>
 
           <button
             onClick={handleBuyNow}
             disabled={availableStock < 1}
-            className="flex-1 flex items-center justify-center bg-[#8a6a2b] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.13em] text-white transition hover:bg-[#6f5422] disabled:bg-neutral-400"
+            className="min-h-11 flex-1 border border-[#171717] bg-[#171717] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.12em] text-white disabled:border-neutral-300 disabled:bg-neutral-300"
           >
             Buy Now
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

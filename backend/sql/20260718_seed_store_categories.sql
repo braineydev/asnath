@@ -1,4 +1,4 @@
--- Asnath catalogue categories. Safe to run repeatedly: it only inserts missing
+-- Aseni catalogue categories. Safe to run repeatedly: it only inserts missing
 -- categories or refreshes the display name of an existing slug. It never deletes
 -- categories or touches products, so existing products keep their category_id.
 -- The storefront navigation (frontend/src/components/Navbar.js) and sitemap use
@@ -8,6 +8,7 @@ values
   ('Earrings', 'earrings'),
   ('Necklaces', 'necklaces'),
   ('Rings', 'rings'),
+  ('Brooches', 'brooches'),
   ('Bracelets & Bangles', 'bracelets-bangles'),
   ('Watches', 'watches'),
   ('Handbags', 'handbags'),

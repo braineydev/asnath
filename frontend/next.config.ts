@@ -5,8 +5,15 @@ const supabaseUrl =
 const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : null;
 
 const nextConfig: NextConfig = {
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     localPatterns: [
+      {
+        pathname: "/signature.png",
+        search: "",
+      },
       {
         pathname: "/api/product-image",
         search: "url=*",

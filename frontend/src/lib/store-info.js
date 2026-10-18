@@ -3,7 +3,7 @@
 // gracefully when one is missing. See docs/SETUP.md.
 const digitsOnly = value => String(value || "").replace(/[^0-9]/g, "");
 
-export const STORE_NAME = "Asnath";
+export const STORE_NAME = "Aseni";
 
 // International format without "+", e.g. 2547XXXXXXXX
 export const WHATSAPP_NUMBER = digitsOnly(

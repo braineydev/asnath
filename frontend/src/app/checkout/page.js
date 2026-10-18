@@ -94,7 +94,7 @@ export default function CheckoutPage() {
           Order Request Ready
         </h1>
         <p className="mx-auto mb-8 max-w-md text-lg text-gray-500">
-          We&apos;ve opened a WhatsApp chat with Asnath and pre-filled your
+          We&apos;ve opened a WhatsApp chat with Aseni and pre-filled your
           order details. Please send the message to confirm your delivery
           arrangement. Your cart remains saved, so you can continue shopping
           from this tab.
@@ -159,7 +159,7 @@ export default function CheckoutPage() {
                       value={formData.fullName}
                       onChange={handleInputChange}
                       className="w-full border border-gray-200 bg-white px-4 py-3 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-black"
-                      placeholder="Alex Mwaura"
+                      placeholder="Asnath Macharia"
                     />
                   </div>
 
@@ -174,7 +174,7 @@ export default function CheckoutPage() {
                       value={formData.address}
                       onChange={handleInputChange}
                       className="w-full border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
-                      placeholder="Kawangware Junction, Nairobi"
+                      placeholder="Windsor Golf Club"
                     />
                   </div>
 
@@ -203,7 +203,7 @@ export default function CheckoutPage() {
                       value={formData.notes}
                       onChange={handleInputChange}
                       className="w-full border border-gray-200 bg-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
-                      placeholder="Deliver Using Super Metro"
+                      placeholder="Use Sendway for delivery"
                     />
                   </div>
                 </div>

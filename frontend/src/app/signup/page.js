@@ -43,7 +43,7 @@ export default function SignupPage() {
             Create account
           </p>
           <h1 className="mt-3 text-3xl font-medium tracking-[-0.045em] text-neutral-950">
-            Join Asnath
+            Join Aseni
           </h1>
         </div>
 

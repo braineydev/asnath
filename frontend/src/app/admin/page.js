@@ -105,6 +105,9 @@ export default function AdminPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [isSettingUpCategories, setIsSettingUpCategories] = useState(false);
+  const [categoriesMissing, setCategoriesMissing] = useState(false);
   const [error, setError] = useState("");
   const [loadError, setLoadError] = useState("");
   const [success, setSuccess] = useState("");
@@ -123,6 +126,41 @@ export default function AdminPage() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Unable to load categories");
     return data.data || [];
+  };
+
+  const retryCategories = async () => {
+    setIsCategoriesLoading(true);
+    setCategoriesError("");
+    setCategoriesMissing(false);
+    try {
+      const loadedCategories = await fetchCategories();
+      setCategories(loadedCategories);
+      setCategoriesMissing(loadedCategories.length === 0);
+    } catch (err) {
+      setCategoriesError(err.message || "Unable to load categories. Please try again.");
+    } finally {
+      setIsCategoriesLoading(false);
+    }
+  };
+
+  const setupDefaultCategories = async () => {
+    setIsSettingUpCategories(true);
+    setCategoriesError("");
+    try {
+      const res = await fetch(`${apiUrl}/admin/categories/seed`, {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Unable to set up categories");
+      setCategories(data.categories || []);
+      setCategoriesMissing(!(data.categories || []).length);
+      if ((data.categories || []).length) setSuccess("Default categories are ready.");
+    } catch (err) {
+      setCategoriesError(err.message || "Unable to set up categories. Please try again.");
+    } finally {
+      setIsSettingUpCategories(false);
+    }
   };
 
   const fetchOrders = async () => {
@@ -203,6 +241,13 @@ export default function AdminPage() {
         setCategories(
           results[4].status === "fulfilled" ? results[4].value : [],
         );
+        if (results[4].status === "fulfilled") {
+          setCategoriesMissing(results[4].value.length === 0);
+          setCategoriesError("");
+        } else {
+          setCategoriesMissing(false);
+        }
+        setIsCategoriesLoading(false);
 
         // Show error only if all critical data failed
         const failed = results.filter(r => r.status === "rejected");
@@ -213,6 +258,7 @@ export default function AdminPage() {
         }
       } catch (err) {
         setLoadError(err.message || "Unable to load admin data");
+        setIsCategoriesLoading(false);
       } finally {
         setIsLoading(false);
       }
@@ -1058,10 +1104,29 @@ export default function AdminPage() {
                           })}
                         </div>
                         {!categories.length && (
-                          <p className="text-sm text-red-600">
-                            {categoriesError ||
-                              "Categories are loading. Please try again in a moment."}
-                          </p>
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <p className={`text-sm ${categoriesError ? "text-red-600" : "text-neutral-600"}`} role={categoriesError ? "alert" : undefined}>
+                              {isCategoriesLoading
+                                ? "Loading product categories…"
+                                : categoriesError || (categoriesMissing
+                                  ? "No categories are set up yet. Add the Aseni categories to continue."
+                                  : "No product categories are available.")}
+                            </p>
+                            {!isCategoriesLoading && (
+                              <button
+                                type="button"
+                                onClick={categoriesMissing ? setupDefaultCategories : retryCategories}
+                                disabled={isSettingUpCategories}
+                                className="border border-neutral-400 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-800 transition hover:border-neutral-900 hover:bg-neutral-900 hover:text-white disabled:opacity-50"
+                              >
+                                {isSettingUpCategories
+                                  ? "Setting up…"
+                                  : categoriesMissing
+                                    ? "Add Aseni categories"
+                                    : "Retry"}
+                              </button>
+                            )}
+                          </div>
                         )}
                       </div>
 
@@ -1182,7 +1247,7 @@ export default function AdminPage() {
 
                       <button
                         type="submit"
-                        disabled={isSavingProduct || isUploadingImage}
+                        disabled={isSavingProduct || isUploadingImage || isCategoriesLoading || !categories.length || isSettingUpCategories}
                         className="w-full bg-[#1c1917] px-6 py-3.5 text-[11px] font-medium uppercase tracking-[0.13em] text-white hover:bg-neutral-700 disabled:opacity-70"
                       >
                         {isSavingProduct ? "Saving product…" : "Save product"}

@@ -88,8 +88,20 @@ export async function POST(request) {
   const supabase = createSupabaseAdminClient();
   const { user } = await getAuthenticatedUser(supabase, cookieStore);
 
-  if (!user || getUserRole(user) !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!user) {
+    return NextResponse.json(
+      { error: "Your admin session has expired. Sign in again." },
+      { status: 401 },
+    );
+  }
+  if (getUserRole(user) !== "admin") {
+    return NextResponse.json(
+      {
+        error:
+          "This account is not an admin. Set its profiles.role to admin in Supabase, then sign in again.",
+      },
+      { status: 403 },
+    );
   }
 
   const formData = await request.formData();

@@ -96,15 +96,15 @@ export async function generateMetadata({
 
   if (!category) {
     return {
-      title: "Category not found | Asnath",
+      title: "Category not found | Aseni",
       description: "The requested category could not be found.",
       alternates: { canonical: `/categories/${resolvedParams.slug}` },
     };
   }
 
-  const title = `${category.name} | Asnath`;
+  const title = `${category.name} | Aseni`;
   const description =
-    category.description || `Browse ${category.name} products at Asnath.`;
+    category.description || `Browse ${category.name} products at Aseni.`;
 
   return {
     title,
@@ -183,7 +183,7 @@ export default async function CategoryPage({
           </div>
           <p className="mt-4 max-w-2xl text-base leading-7 text-neutral-600">
             {category.description ||
-              `Discover ${category.name.toLowerCase()} from Asnath.`}
+              `Discover ${category.name.toLowerCase()} from Aseni.`}
           </p>
         </div>
 

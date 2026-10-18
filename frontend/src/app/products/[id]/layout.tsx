@@ -29,7 +29,7 @@ export async function generateMetadata({
   const description =
     product.meta_description ||
     product.description ||
-    `Shop ${product.name} at Asnath.`;
+    `Shop ${product.name} at Aseni.`;
   const path = `/products/${product.slug || product.id}`;
 
   return {

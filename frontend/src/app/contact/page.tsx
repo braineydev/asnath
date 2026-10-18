@@ -89,7 +89,7 @@ export default function ContactPage() {
         </div>
         {STORE_MAP_EMBED_URL && (
           <iframe
-            title="Asnath location map"
+            title="Aseni location map"
             src={STORE_MAP_EMBED_URL}
             className="min-h-[340px] w-full border-0 lg:min-h-full"
             loading="lazy"

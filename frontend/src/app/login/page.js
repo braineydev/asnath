@@ -39,7 +39,7 @@ export default function LoginPage() {
             Welcome back
           </p>
           <h1 className="mt-3 text-3xl font-medium tracking-[-0.045em] text-neutral-950">
-            Sign in to Asnath
+            Sign in to Aseni
           </h1>
         </div>
 

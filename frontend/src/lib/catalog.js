@@ -1,7 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 
 const PRODUCT_SELECT = "*, categories(id, name, slug)";
-const CATALOG_REQUEST_TIMEOUT_MS = 4000;
+// Product queries can exceed four seconds on a cold Supabase connection. Keep
+// a bounded timeout, but give the database enough time to answer before the
+// admin dashboard's product request is aborted.
+const CATALOG_REQUEST_TIMEOUT_MS = 15000;
 
 async function fetchCatalogRequest(input, init = {}) {
   const controller = new AbortController();

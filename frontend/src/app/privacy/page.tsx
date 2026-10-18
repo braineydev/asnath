@@ -15,7 +15,7 @@ export default function PrivacyPage() {
     <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-500">Legal</p>
     <h1 className="mt-3 text-4xl font-medium tracking-[-0.055em] text-neutral-950 sm:text-5xl">Privacy Policy</h1>
     <p className="mt-4 text-sm text-neutral-500">Last updated: July 18, 2026</p>
-    <p className="mt-8 max-w-2xl leading-7 text-neutral-600">This policy explains how Asnath handles personal information when you browse, shop, create an account, or contact us.</p>
+    <p className="mt-8 max-w-2xl leading-7 text-neutral-600">This policy explains how Aseni handles personal information when you browse, shop, create an account, or contact us.</p>
     <div className="mt-10 divide-y divide-neutral-200 border-y border-neutral-200">
       {sections.map(([title, copy]) => <section key={title} className="grid gap-3 py-7 sm:grid-cols-[180px_1fr] sm:gap-8"><h2 className="font-medium text-neutral-950">{title}</h2><p className="leading-7 text-neutral-600">{copy}</p></section>)}
     </div>
